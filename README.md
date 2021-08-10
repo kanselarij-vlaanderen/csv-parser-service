@@ -30,11 +30,17 @@ services:
 ```
 
 # Endpoints
-## get /csv/:id/parse
+## GET /csv/:id/parse
 ### params
 | param | description |
 |-------|-------------|
 | id | id of the csv file to be parsed |
+
+### Responses
+| status | description |
+|-------|-------------|
+| 404 | a file with the provided id does not exist |
+| 400 | the id provided is not matched with a file that has a .csv extension |
 
 ### example
 a csv file that looks like the one below, 
