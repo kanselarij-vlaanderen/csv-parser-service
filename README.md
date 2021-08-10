@@ -7,7 +7,7 @@ CSV parser microservice that has an endpoint which finds a CSV file by id. That 
 
 ### Run the application in development mode
 
-For development, add a docker-compose.override.yml to your main project (app-persberchten), or add the following service to your existng docker-compose.override.yaml.
+For development, add a docker-compose.override.yml to your main project (app-persberichten), or add the following service to your existing docker-compose.override.yaml.
 (You might have to change the volume path to the root path of this application).
 
 ```yaml
@@ -22,8 +22,6 @@ services:
       - 9229:9229
     environment:
       NODE_ENV: "development"
-    links:
-      - triplestore:database
     volumes:
       - ./data/files:/share
       - ../press-release-csv-file-parser/:/app/
