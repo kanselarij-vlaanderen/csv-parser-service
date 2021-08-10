@@ -1,6 +1,6 @@
 # Press release CSV Parser service
 
-CSV parser microservice that has an endpoint which finds a CSV file and returns the rows of the CSV as JSON
+CSV parser microservice that has an endpoint which finds a CSV file by id. That csv's first line (column headers) will be the keys for the JSON it returns and every row will be an instance of such an object.
 
 
 ## How to
@@ -28,3 +28,37 @@ services:
       - ./data/files:/share
       - ../press-release-csv-file-parser/:/app/
 ```
+
+# Endpoints
+## get /csv/:id/parse
+### params
+| param | description |
+|-------|-------------|
+| id | id of the csv file to be parsed |
+
+### example
+a csv file that looks like the one below, 
+
+```csv
+key1, key2, key3
+foo, bar, baz
+qux, quux, quuz
+```
+
+wll result in a response that looks like
+
+```json
+[
+  {
+    "key1": "foo",
+    "key2": "bar",
+    "key3": "baz"
+  }, {
+    "key1": "qux",
+    "key2": "quux",
+    "key3": "quuz"
+  }
+]
+```
+
+

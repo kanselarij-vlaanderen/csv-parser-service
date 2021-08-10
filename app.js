@@ -1,8 +1,8 @@
 import { app, errorHandler } from 'mu';
 import { handleGenericError } from './helpers/generic-helpers';
-import { findCsvFleById } from './sparql/csv.sparql';
+import { findCsvFleLocationById } from './sparql/csv.sparql';
 import { readFile } from 'fs/promises';
-import * as path from 'path';
+
 const neatCsv = require('neat-csv');
 
 app.get('/csv/:uuid/parse', async (req, res, next) => {
@@ -10,22 +10,20 @@ app.get('/csv/:uuid/parse', async (req, res, next) => {
     const csvFileUUID = req.params.uuid;
     try {
         // find fileUrl from csv file in triplestore by provided uuid.
-        const result = await findCsvFleById(csvFileUUID);
-        console.log(result);
+        const filePath = await findCsvFleLocationById(csvFileUUID);
 
-        if (result) {
-            console.log('FOUND File: ', result.fileUrl);
-            // Load file from location and
-            const file = await readFile(path.join('/share', result.fileUrl), {encoding: 'utf8'});
+        if (filePath) {
+            // Load file from location
+            const file = await readFile(filePath, {encoding: 'utf8'});
 
             // parse csv file
             const parsedCSV = await neatCsv(file);
 
             // send parsed csv back to client
-            res.json(parsedCSV);
-            res.send();
-            return;
+            return res.json(parsedCSV);
         } else {
+
+            // there is no file found, so return 404 Not Found
             return res.sendStatus(404);
         }
 

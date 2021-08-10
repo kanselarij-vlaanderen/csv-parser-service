@@ -1,5 +1,4 @@
-import { sparqlEscapeString, sparqlEscapeUri } from 'mu';
-import { querySudo as query } from '@lblod/mu-auth-sudo';
+import { query, sparqlEscapeString, sparqlEscapeUri } from 'mu';
 
 const PREFIXES = `
 		PREFIX mu: ${sparqlEscapeUri('http://mu.semte.ch/vocabularies/core/')}
@@ -7,20 +6,23 @@ const PREFIXES = `
 		PREFIX nfo: ${sparqlEscapeUri('http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#')}
 `;
 
-export async function findCsvFleById(uuid) {
+export async function findCsvFleLocationById(uuid) {
     console.log('UUID: ', uuid);
     const q = await query(`
      ${PREFIXES}          
      SELECT ?fileUrl       
      WHERE {
-        GRAPH ?graph {
             ?uri        mu:uuid             ${sparqlEscapeString(uuid)} .
             ?fileUrl     nie:dataSource      ?uri .
-        }
      }
     `);
 
-    console.log(q.results.bindings);
+    let path = q.results.bindings.length ? q.results.bindings[0].fileUrl.value : null;
 
-    return q.results.bindings.length ? q.results.bindings[0]: null;
+    if (path) {
+        // reformat the file path
+        path = path.replace('share://', '/share/');
+    }
+
+    return path;
 }
