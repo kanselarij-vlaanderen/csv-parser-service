@@ -2,6 +2,7 @@ import { app, errorHandler } from 'mu';
 import { handleGenericError } from './helpers/generic-helpers';
 import { findCsvFleLocationById } from './sparql/csv.sparql';
 import { readFile } from 'fs/promises';
+import { isCsvPath } from './helpers/util';
 
 const neatCsv = require('neat-csv');
 
@@ -13,6 +14,12 @@ app.get('/csv/:uuid/parse', async (req, res, next) => {
         const filePath = await findCsvFleLocationById(csvFileUUID);
 
         if (filePath) {
+            // check if file is a .csv file, if not return 400 Bad Request
+            if (!isCsvPath(filePath)) {
+                res.status(400);
+                return res.send('The provided id does not match a .csv file');
+            }
+
             // Load file from location
             const file = await readFile(filePath, {encoding: 'utf8'});
 
