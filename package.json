@@ -1,6 +1,6 @@
 {
   "name": "press-release-csv-file-parser",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "CSV parser microservice that has an endpoint which finds a CSV file and returns the rows of the CSV as JSON",
   "main": "app.js",
   "scripts": {
